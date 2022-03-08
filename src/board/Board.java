@@ -186,7 +186,6 @@ public class Board {
 		copyBoard(board, undoBoard);
 		promotedPiece = null;
 		removePiece(sourcePos);
-		addPiece(targetPos, sourcePiece);
 		
 		if (sourcePiece instanceof Pawn) {
 			// En Passant special move
@@ -227,10 +226,11 @@ public class Board {
 				undoMove();
 				throw new BoardException("You can't put yourself in check");
 			}
-			if (targetPiece != null) 
+			if (targetPiece != null) {
 				removePiece(targetPiece.getPosition());
-			if (targetPiece != null) 
 				addCapturedPiece(targetPiece);
+			}
+			addPiece(targetPos, sourcePiece);
 			selectedPiece = null;
 			turns++;
 			currentColorTurn = oppositeColor();

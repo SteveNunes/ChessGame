@@ -2,8 +2,9 @@ package application;
 
 import java.util.Scanner;
 
-import board.*;
-import piece.*;
+import board.Board;
+import board.BoardException;
+import piece.Position;
 
 public class Program {
 	
