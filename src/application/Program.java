@@ -22,12 +22,11 @@ public class Program {
 		System.out.print(">");
 		try { 
 			imput = sc.nextLine();
-			if (imput.toLowerCase().equals("1")) AnsiColors.setToColored(); 
+			if (imput.toLowerCase().equals("1")) 
+				AnsiColors.setToColored(); 
 		}
 		catch (Exception e) { }
 		
-		Boolean withTry = true;
-
 		while (playing) {
 			board.reset();
 			while (!board.checkMate()) {
@@ -46,25 +45,19 @@ public class Program {
 					if (!board.pieceIsSelected()) 
 						System.out.print("Enter source piece coordinate (e.g. a1): ");
 					else System.out.print("Enter target coordinate (e.g. a1): ");
-					if (withTry) {
-						try {
-							imput = sc.nextLine();
-							if (imput.length() >= 4) {
-								board.selectPiece(Position.stringToPosition(imput.substring(0, 2)));
-								board.movePieceTo(Position.stringToPosition(imput.substring(2, 4)));
-							}
-							else if (!board.pieceIsSelected()) board.selectPiece(Position.stringToPosition(imput));
-							else board.movePieceTo(Position.stringToPosition(imput));
-						}
-						catch (BoardException e) { error = e.getMessage(); }
-						catch (RuntimeException e)
-							{ error = "Invalid coordinate! The value must be between 'a1' to 'h8'"; }
-					}
-					else {
+					try {
 						imput = sc.nextLine();
-						if (!board.pieceIsSelected()) board.selectPiece(Position.stringToPosition(imput));
+						if (imput.length() >= 4) {
+							board.selectPiece(Position.stringToPosition(imput.substring(0, 2)));
+							board.movePieceTo(Position.stringToPosition(imput.substring(2, 4)));
+						}
+						else if (!board.pieceIsSelected()) board.selectPiece(Position.stringToPosition(imput));
 						else board.movePieceTo(Position.stringToPosition(imput));
 					}
+					catch (BoardException e) 
+						{ error = e.getMessage(); }
+					catch (RuntimeException e)
+						{ error = "Invalid coordinate! The value must be between 'a1' to 'h8'"; }
 				}
 			}
 			AnsiColors.clearScreen();
