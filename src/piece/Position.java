@@ -43,11 +43,8 @@ public class Position {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (obj == null) return false;
-		if (getClass() != obj.getClass()) return false;
 		Position other = (Position) obj;
-		return column == other.column && row == other.row;
+		return obj != null && column == other.column && row == other.row;
 	}
 
 	public static Boolean equals(Position position1, Position position2)
