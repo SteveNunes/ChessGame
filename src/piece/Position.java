@@ -1,5 +1,7 @@
 package piece;
 
+import java.util.Objects;
+
 import board.BoardException;
 
 public class Position {
@@ -36,11 +38,17 @@ public class Position {
 		setColumn(getColumn() + incColumn);
 	}
 	
-	public Boolean equals(Position position)
-		{ return getRow() == position.getRow() && getColumn() == position.getColumn(); }
+	@Override
+	public int hashCode() { return Objects.hash(column, row); }
 
-	public Boolean equals(int row, int column)
-		{ return getRow() == row && getColumn() == column; }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		Position other = (Position) obj;
+		return column == other.column && row == other.row;
+	}
 
 	public static Boolean equals(Position position1, Position position2)
 		{ return position1.getRow() == position2.getRow() && position1.getColumn() == position2.getColumn(); }
