@@ -163,6 +163,9 @@ public class Board {
 		}
 	}
 	
+	public void cancelSelection()
+		{ selectedPiece = null; }
+	
 	private Piece movePieceTo(Position sourcePos, Position targetPos, Boolean testingCheckMate) throws BoardException {
 		if (selectedPiece != null && targetPos.equals(selectedPiece.getPosition())) {
 			selectedPiece = null;
