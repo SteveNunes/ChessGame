@@ -3,7 +3,7 @@ package application;
 import java.util.Scanner;
 
 import board.Board;
-import board.BoardException;
+import exceptions.BoardException;
 import piece.Position;
 
 public class Program {
@@ -64,7 +64,7 @@ public class Program {
 			ui.drawBoard();
 			System.out.println();
 			playing = false;
-			System.out.println(AnsiColors.ANSI_CYAN + "CHECKMATE! " + ui.turnColor(board.getWinnerColor()) + " won!");
+			System.out.println(AnsiColors.ANSI_CYAN + "CHECKMATE! " + ui.currentTurnColor(board.getWinnerColor()) + " won!");
 			System.out.print(AnsiColors.ANSI_RESET + "Play again? (y|n): ");
 			try { if (sc.nextLine().toLowerCase().equals("y")) playing = true; }
 			catch (Exception e) { }
