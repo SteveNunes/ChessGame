@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 import board.Board;
 import exceptions.BoardException;
-import piece.Position;
+import piece.PiecePosition;
 
 public class Program {
 	
@@ -48,11 +48,11 @@ public class Program {
 					try {
 						imput = sc.nextLine();
 						if (imput.length() >= 4) {
-							board.selectPiece(Position.stringToPosition(imput.substring(0, 2)));
-							board.movePieceTo(Position.stringToPosition(imput.substring(2, 4)));
+							board.selectPiece(PiecePosition.stringToPosition(imput.substring(0, 2)));
+							board.movePieceTo(PiecePosition.stringToPosition(imput.substring(2, 4)));
 						}
-						else if (!board.pieceIsSelected()) board.selectPiece(Position.stringToPosition(imput));
-						else board.movePieceTo(Position.stringToPosition(imput));
+						else if (!board.pieceIsSelected()) board.selectPiece(PiecePosition.stringToPosition(imput));
+						else board.movePieceTo(PiecePosition.stringToPosition(imput));
 					}
 					catch (BoardException e) 
 						{ error = e.getMessage(); }
