@@ -3,9 +3,9 @@ package application;
 import java.util.Scanner;
 
 import board.Board;
+import enums.PieceColor;
+import enums.PieceType;
 import piece.Piece;
-import piece.PieceColor;
-import piece.PieceType;
 import piece.Position;
 
 public class UI {
@@ -20,11 +20,11 @@ public class UI {
 		if (piece == null)
 			str = "-";
 		else if (board.pieceWasPromoted() && piece == board.getPromotedPiece())
-			str = AnsiColors.ANSI_PURPLE_BACKGROUND + AnsiColors.ANSI_WHITE + piece.toString();
+			str = AnsiColors.ANSI_PURPLE_BACKGROUND + AnsiColors.ANSI_WHITE + piece.let();
 		else if (piece == board.getSelectedPiece())
-			str = (piece.getColor() == PieceColor.BLACK ? AnsiColors.BLACK_PIECE_BACKGROUND : AnsiColors.WHITE_PIECE_BACKGROUND) + AnsiColors.ANSI_BLACK + piece.toString();
+			str = (piece.getColor() == PieceColor.BLACK ? AnsiColors.BLACK_PIECE_BACKGROUND : AnsiColors.WHITE_PIECE_BACKGROUND) + AnsiColors.ANSI_BLACK + piece.let();
 		else
-			str = (piece.getColor() == PieceColor.BLACK ? AnsiColors.BLACK_PIECE : AnsiColors.WHITE_PIECE) + piece.toString();
+			str = (piece.getColor() == PieceColor.BLACK ? AnsiColors.BLACK_PIECE : AnsiColors.WHITE_PIECE) + piece.let();
 		return str + AnsiColors.ANSI_RESET;
 	}
 	
@@ -90,13 +90,13 @@ public class UI {
 			try {
 				imput = sc.nextLine().toLowerCase();
 				if (imput.equals("q")) 
-					board.promotePiece(PieceType.QUEEN);
+					board.promotePieceTo(PieceType.QUEEN);
 				else if (imput.equals("b")) 
-					board.promotePiece(PieceType.BISHOP);
+					board.promotePieceTo(PieceType.BISHOP);
 				else if (imput.equals("n"))
-					board.promotePiece(PieceType.KNIGHT);
+					board.promotePieceTo(PieceType.KNIGHT);
 				else if (imput.equals("r"))
-					board.promotePiece(PieceType.ROOK);
+					board.promotePieceTo(PieceType.ROOK);
 				else
 					error = "Invalid promotion level";
 			}
