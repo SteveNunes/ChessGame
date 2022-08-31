@@ -3,34 +3,60 @@ package application;
 import java.util.Scanner;
 
 import board.Board;
-import exceptions.BoardException;
+import enums.ChessPlayMode;
+import enums.PieceType;
+import exceptions.PieceMoveException;
+import exceptions.PieceSelectionException;
 import piece.PiecePosition;
 
 public class Program {
 	
+	private static Board board;
+	private static UI ui;
+	
 	public static void main(String[] args) {
 		
+		board = new Board();
+		ui = new UI(board);
 		String imput, error = "";
 		Boolean playing = true;
 		Scanner sc = new Scanner(System.in);
-		Board board = new Board();
-		UI ui = new UI(board);
 		
+		System.out.println("Select the game mode\n");
+		System.out.println("1 - Player vs Player");
+		System.out.println("2 - Player vs CPU");
+		System.out.println("3 - CPU vs CPU\n");
+		System.out.print(">");
+		try { 
+			imput = sc.nextLine();
+			board.setPlayMode(imput.equals("1") ? ChessPlayMode.PLAYER_VS_PLAYER :
+				imput.equals("2") ? ChessPlayMode.PLAYER_VS_CPU : ChessPlayMode.CPU_VS_CPU);
+		}
+		catch (Exception e) { }
+
 		System.out.println("Select the game colors (Warning: for colors work properly, you must run the game through a console with color support (e.g. Git Bash))\n");
 		System.out.println("1 - Colored");
 		System.out.println("2 - Black and White\n");
 		System.out.print(">");
 		try { 
 			imput = sc.nextLine();
-			if (imput.toLowerCase().equals("1")) 
-				AnsiColors.setToColored(); 
+			if (imput.equals("1")) 
+				AnsiColors.setToColored();
 		}
 		catch (Exception e) { }
 		
 		while (playing) {
-			board.reset();
+			try {
+				board.reset();
+				setPiecesOnTheBoard();
+				board.validateBoard();
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+				return;
+			}
 			while (!board.checkMate()) {
-				if (board.pieceWasPromoted()) ui.promotePiece(sc);
+				if (board.pawnWasPromoted()) ui.promotePiece(sc);
 				else {
 					AnsiColors.clearScreen();
 					ui.drawBoard();
@@ -42,22 +68,40 @@ public class Program {
 						error = "";
 					}
 					
-					if (!board.pieceIsSelected()) 
-						System.out.print("Enter source piece coordinate (e.g. a1): ");
-					else System.out.print("Enter target coordinate (e.g. a1): ");
-					try {
-						imput = sc.nextLine();
-						if (imput.length() >= 4) {
-							board.selectPiece(PiecePosition.stringToPosition(imput.substring(0, 2)));
-							board.movePieceTo(PiecePosition.stringToPosition(imput.substring(2, 4)));
+					if (!board.isCpuTurn()) {
+						if (!board.pieceIsSelected()) {
+							if (board.getPlayMode() != ChessPlayMode.PLAYER_VS_PLAYER &&
+									board.getLastMovedPiece() != null) {
+								
+							}
+							System.out.print("Enter source piece coordinate (e.g. a1): ");
 						}
-						else if (!board.pieceIsSelected()) board.selectPiece(PiecePosition.stringToPosition(imput));
-						else board.movePieceTo(PiecePosition.stringToPosition(imput));
-					}
-					catch (BoardException e) 
+						else System.out.print("Enter target coordinate (e.g. a1): ");
+						try {
+							imput = sc.nextLine();
+							if (imput.length() >= 4) {
+								board.selectPiece(PiecePosition.stringToPosition(imput.substring(0, 2)));
+								board.movePieceTo(PiecePosition.stringToPosition(imput.substring(2, 4)));
+							}
+							else if (!board.pieceIsSelected()) board.selectPiece(PiecePosition.stringToPosition(imput));
+							else board.movePieceTo(PiecePosition.stringToPosition(imput));
+						}
+						catch (PieceMoveException e) 
+							{ error = e.getMessage(); }
+						catch (PieceSelectionException e) 
 						{ error = e.getMessage(); }
-					catch (RuntimeException e)
-						{ error = "Invalid coordinate! The value must be between 'a1' to 'h8'"; }
+						catch (RuntimeException e)
+							{ error = "Invalid coordinate! The value must be between 'a1' to 'h8'"; }
+					}
+					else {
+						try {
+							board.getChessAI().doCpuSelectAPiece();
+							if (board.pawnWasPromoted())
+								board.promotePawnTo(PieceType.QUEEN);
+							board.getChessAI().doCpuMoveSelectedPiece();
+						}
+						catch (Exception e) {}
+					}
 				}
 			}
 			AnsiColors.clearScreen();
@@ -71,4 +115,18 @@ public class Program {
 		}	
 		sc.close();
 	}
+	
+	private static void setPiecesOnTheBoard() throws Exception {
+		board.setBoard(new Character[][] {
+			{'r','n','b','q','k','b','n','r'},
+			{'p','p','p','p','p','p','p','p'},
+			{' ',' ',' ',' ',' ',' ',' ',' '},
+			{' ',' ',' ',' ',' ',' ',' ',' '},
+			{' ',' ',' ',' ',' ',' ',' ',' '},
+			{' ',' ',' ',' ',' ',' ',' ',' '},
+			{'P','P','P','P','P','P','P','P'},
+			{'R','N','B','Q','K','B','N','R'}
+		});
+	}
+
 }

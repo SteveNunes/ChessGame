@@ -1,5 +1,6 @@
 package application;
 
+import java.util.List;
 import java.util.Scanner;
 
 import board.Board;
@@ -19,7 +20,7 @@ public class UI {
 		String str;
 		if (piece == null)
 			str = "-";
-		else if (board.pieceWasPromoted() && piece == board.getPromotedPiece())
+		else if (board.pawnWasPromoted() && piece == board.getEnPassantPawn())
 			str = AnsiColors.ANSI_PURPLE_BACKGROUND + AnsiColors.ANSI_WHITE + piece.let();
 		else if (piece == board.getSelectedPiece())
 			str = (piece.getColor() == PieceColor.BLACK ? AnsiColors.BLACK_PIECE_BACKGROUND : AnsiColors.WHITE_PIECE_BACKGROUND) + AnsiColors.ANSI_BLACK + piece.let();
@@ -32,10 +33,12 @@ public class UI {
 		{ return (color == PieceColor.BLACK ? AnsiColors.BLACK_PIECE : AnsiColors.WHITE_PIECE) + color + AnsiColors.ANSI_RESET; }
 	
 	public void drawInfos() {
-		System.out.println(currentTurnColor(PieceColor.WHITE) + " captured Pieces: " + AnsiColors.ANSI_PURPLE + board.getCapturedPieces(PieceColor.WHITE) + AnsiColors.ANSI_RESET);
-		System.out.println(currentTurnColor(PieceColor.BLACK) + " captured Pieces: " + AnsiColors.ANSI_PURPLE + board.getCapturedPieces(PieceColor.BLACK) + AnsiColors.ANSI_RESET);
+		List<Piece> whiteCapturedPieces = board.sortPieceListByPieceValue(board.getCapturedPiecesByColor(PieceColor.WHITE));
+		List<Piece> blackCapturedPieces = board.sortPieceListByPieceValue(board.getCapturedPiecesByColor(PieceColor.BLACK));
+		System.out.println(currentTurnColor(PieceColor.WHITE) + " captured Pieces: " + AnsiColors.ANSI_PURPLE + whiteCapturedPieces + AnsiColors.ANSI_RESET);
+		System.out.println(currentTurnColor(PieceColor.BLACK) + " captured Pieces: " + AnsiColors.ANSI_PURPLE + blackCapturedPieces + AnsiColors.ANSI_RESET);
 		System.out.println();
-		if (board.currentColorIsChecked())
+		if (board.isChecked())
 			System.out.println(AnsiColors.ANSI_CYAN + "CHECK!" + AnsiColors.ANSI_RESET);
 		System.out.println("Turn: " + currentTurnColor(board.getCurrentColorTurn()));
 	}
@@ -75,7 +78,7 @@ public class UI {
 		drawBoard();
 		String imput, error = "";
 		System.out.print("\n" + AnsiColors.ANSI_CYAN + "Promoted piece! ");
-		while (board.pieceWasPromoted()) {
+		while (board.pawnWasPromoted()) {
 			if (!error.isEmpty()) {
 				AnsiColors.clearScreen();
 				drawBoard();
@@ -90,13 +93,13 @@ public class UI {
 			try {
 				imput = sc.nextLine().toLowerCase();
 				if (imput.equals("q")) 
-					board.promotePieceTo(PieceType.QUEEN);
+					board.promotePawnTo(PieceType.QUEEN);
 				else if (imput.equals("b")) 
-					board.promotePieceTo(PieceType.BISHOP);
+					board.promotePawnTo(PieceType.BISHOP);
 				else if (imput.equals("n"))
-					board.promotePieceTo(PieceType.KNIGHT);
+					board.promotePawnTo(PieceType.KNIGHT);
 				else if (imput.equals("r"))
-					board.promotePieceTo(PieceType.ROOK);
+					board.promotePawnTo(PieceType.ROOK);
 				else
 					error = "Invalid promotion level";
 			}
