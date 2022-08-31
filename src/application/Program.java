@@ -55,7 +55,7 @@ public class Program {
 				e.printStackTrace();
 				return;
 			}
-			while (!board.checkMate()) {
+			while (!board.isGameOver()) {
 				if (board.pawnWasPromoted()) ui.promotePiece(sc);
 				else {
 					AnsiColors.clearScreen();
@@ -108,7 +108,16 @@ public class Program {
 			ui.drawBoard();
 			System.out.println();
 			playing = false;
-			System.out.println(AnsiColors.ANSI_CYAN + "CHECKMATE! " + ui.currentTurnColor(board.getWinnerColor()) + " won!");
+			if (board.checkMate())
+				System.out.println(AnsiColors.ANSI_CYAN + "Checkmate! " + ui.currentTurnColor(board.getWinnerColor()) + " won!");
+			else if (board.isDrawByStalemate())
+				System.out.println(AnsiColors.ANSI_CYAN + "Draw game by Stalemate!");
+			else if (board.isDrawByBareKings())
+				System.out.println(AnsiColors.ANSI_CYAN + "Draw game by Bare Kings!");
+			else if (board.isDrawByThreefoldRepetition())
+				System.out.println(AnsiColors.ANSI_CYAN + "Draw game by Threefold-repetition!");
+			else
+				System.out.println(AnsiColors.ANSI_CYAN + "Draw game!");
 			System.out.print(AnsiColors.ANSI_RESET + "Play again? (y|n): ");
 			try { if (sc.nextLine().toLowerCase().equals("y")) playing = true; }
 			catch (Exception e) { }
