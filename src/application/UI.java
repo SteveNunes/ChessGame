@@ -6,8 +6,8 @@ import java.util.Scanner;
 import board.Board;
 import enums.PieceColor;
 import enums.PieceType;
+import gameutil.Position;
 import piece.Piece;
-import piece.PiecePosition;
 
 public class UI {
 
@@ -45,7 +45,7 @@ public class UI {
 
 	public void drawBoard() {
 		String[] pieceName = {"", "P = Pawn","R = Rook","B = Bishop","N = Knight","Q = Queen","K = King",""};
-		PiecePosition position;
+		Position position;
 		Piece piece = board.getSelectedPiece(), piece2;
 		
 		System.out.print("   ");
@@ -55,7 +55,7 @@ public class UI {
 		for(int row = 0; row < 8; row++) {
 			System.out.print(AnsiColors.ANSI_GREEN + (8 - row) + "  " + AnsiColors.ANSI_RESET);
 			for(int col = 0; col < 8; col++) {
-				position = new PiecePosition(row, col);
+				position = new Position(col, row);
 				piece2 = board.getPieceAt(position);
 				if (piece != null && piece.canMoveToPosition(position)) {
 					if (piece2 != null)

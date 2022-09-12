@@ -7,7 +7,6 @@ import enums.ChessPlayMode;
 import enums.PieceType;
 import exceptions.PieceMoveException;
 import exceptions.PieceSelectionException;
-import piece.PiecePosition;
 
 public class Program {
 	
@@ -80,11 +79,11 @@ public class Program {
 						try {
 							imput = sc.nextLine();
 							if (imput.length() >= 4) {
-								board.selectPiece(PiecePosition.stringToPosition(imput.substring(0, 2)));
-								board.movePieceTo(PiecePosition.stringToPosition(imput.substring(2, 4)));
+								board.selectPiece(Board.stringToPosition(imput.substring(0, 2)));
+								board.movePieceTo(Board.stringToPosition(imput.substring(2, 4)));
 							}
-							else if (!board.pieceIsSelected()) board.selectPiece(PiecePosition.stringToPosition(imput));
-							else board.movePieceTo(PiecePosition.stringToPosition(imput));
+							else if (!board.pieceIsSelected()) board.selectPiece(Board.stringToPosition(imput));
+							else board.movePieceTo(Board.stringToPosition(imput));
 						}
 						catch (PieceMoveException e) 
 							{ error = e.getMessage(); }
